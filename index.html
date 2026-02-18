@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AlmoxSystem — Gestão de Almoxarifado</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+
+  <!-- ========== TELA DE LOGIN ========== -->
+  <div id="tela-login" class="tela ativa">
+    <div class="login-bg">
+      <div class="login-shapes">
+        <div class="shape s1"></div>
+        <div class="shape s2"></div>
+        <div class="shape s3"></div>
+      </div>
+    </div>
+    <div class="login-card">
+      <div class="login-logo">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">AlmoxSystem</span>
+      </div>
+      <h1 class="login-title">Bem-vindo de volta</h1>
+      <p class="login-sub">Faça login para acessar o sistema</p>
+      <div id="login-erro" class="erro-msg" style="display:none"></div>
+      <div class="campo">
+        <label>E-mail</label>
+        <input type="email" id="login-email" placeholder="seu@email.com" />
+      </div>
+      <div class="campo">
+        <label>Senha</label>
+        <input type="password" id="login-senha" placeholder="••••••••" />
+      </div>
+      <button class="btn-primary" onclick="fazerLogin()">Entrar</button>
+      <p class="login-footer">Primeiro acesso? <a href="#" onclick="mostrarCadastro()">Criar conta</a></p>
+    </div>
+  </div>
+
+  <!-- ========== TELA DE CADASTRO ========== -->
+  <div id="tela-cadastro" class="tela">
+    <div class="login-bg">
+      <div class="login-shapes">
+        <div class="shape s1"></div>
+        <div class="shape s2"></div>
+        <div class="shape s3"></div>
+      </div>
+    </div>
+    <div class="login-card">
+      <div class="login-logo">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">AlmoxSystem</span>
+      </div>
+      <h1 class="login-title">Criar conta</h1>
+      <p class="login-sub">Preencha os dados para se cadastrar</p>
+      <div id="cadastro-erro" class="erro-msg" style="display:none"></div>
+      <div id="cadastro-ok" class="ok-msg" style="display:none"></div>
+      <div class="campo">
+        <label>Nome completo</label>
+        <input type="text" id="cad-nome" placeholder="Seu nome" />
+      </div>
+      <div class="campo">
+        <label>E-mail</label>
+        <input type="email" id="cad-email" placeholder="seu@email.com" />
+      </div>
+      <div class="campo">
+        <label>Senha</label>
+        <input type="password" id="cad-senha" placeholder="Mínimo 6 caracteres" />
+      </div>
+      <button class="btn-primary" onclick="fazerCadastro()">Cadastrar</button>
+      <p class="login-footer">Já tem conta? <a href="#" onclick="mostrarLogin()">Fazer login</a></p>
+    </div>
+  </div>
+
+  <!-- ========== APP PRINCIPAL ========== -->
+  <div id="app" class="tela" style="display:none; flex-direction:row;">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-icon">⬡</span>
+        <span class="logo-text">AlmoxSystem</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item ativo" onclick="irPara('dashboard', this)">
+          <span class="nav-icon">◈</span> Dashboard
+        </a>
+        <a href="#" class="nav-item" onclick="irPara('produtos', this)">
+          <span class="nav-icon">◧</span> Produtos
+        </a>
+        <a href="#" class="nav-item" onclick="irPara('entrada', this)">
+          <span class="nav-icon">↓</span> Entrada
+        </a>
+        <a href="#" class="nav-item" onclick="irPara('saida', this)">
+          <span class="nav-icon">↑</span> Saída
+        </a>
+        <a href="#" class="nav-item" onclick="irPara('historico', this)">
+          <span class="nav-icon">≡</span> Histórico
+        </a>
+        <a href="#" class="nav-item" onclick="irPara('relatorios', this)">
+          <span class="nav-icon">◎</span> Relatórios
+        </a>
+      </nav>
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <span class="user-avatar" id="user-avatar">U</span>
+          <div>
+            <div class="user-name" id="user-name">Usuário</div>
+            <div class="user-role" id="user-role">operador</div>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="fazerLogout()">Sair</button>
+      </div>
+    </aside>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="main-content">
+
+      <!-- DASHBOARD -->
+      <section id="sec-dashboard" class="secao ativa">
+        <div class="page-header">
+          <h2>Dashboard</h2>
+          <span class="page-sub">Visão geral do estoque</span>
+        </div>
+        <div class="cards-grid">
+          <div class="card-stat">
+            <div class="card-stat-label">Total de Produtos</div>
+            <div class="card-stat-value" id="stat-total">—</div>
+          </div>
+          <div class="card-stat verde">
+            <div class="card-stat-label">Entradas Hoje</div>
+            <div class="card-stat-value" id="stat-entradas">—</div>
+          </div>
+          <div class="card-stat laranja">
+            <div class="card-stat-label">Saídas Hoje</div>
+            <div class="card-stat-value" id="stat-saidas">—</div>
+          </div>
+          <div class="card-stat vermelho">
+            <div class="card-stat-label">Estoque Baixo</div>
+            <div class="card-stat-value" id="stat-baixo">—</div>
+          </div>
+        </div>
+        <div class="tabela-container">
+          <div class="tabela-header">
+            <h3>⚠ Produtos com Estoque Baixo</h3>
+          </div>
+          <table class="tabela">
+            <thead>
+              <tr><th>Código</th><th>Produto</th><th>Qtd Atual</th><th>Mínimo</th><th>Status</th></tr>
+            </thead>
+            <tbody id="tabela-baixo-estoque"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- PRODUTOS -->
+      <section id="sec-produtos" class="secao">
+        <div class="page-header">
+          <h2>Produtos</h2>
+          <button class="btn-primary small" onclick="abrirModalProduto()">+ Novo Produto</button>
+        </div>
+        <div class="filtros">
+          <input type="text" id="busca-produto" placeholder="Buscar produto..." oninput="buscarProdutos()" />
+        </div>
+        <div class="tabela-container">
+          <table class="tabela">
+            <thead>
+              <tr><th>Código</th><th>Nome</th><th>Categoria</th><th>Unidade</th><th>Qtd</th><th>Mín.</th><th>Ações</th></tr>
+            </thead>
+            <tbody id="tabela-produtos"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ENTRADA -->
+      <section id="sec-entrada" class="secao">
+        <div class="page-header">
+          <h2>Registrar Entrada</h2>
+          <span class="page-sub">Adicione itens ao estoque</span>
+        </div>
+        <div class="form-card">
+          <div class="form-grid">
+            <div class="campo">
+              <label>Produto *</label>
+              <select id="ent-produto">
+                <option value="">Selecione um produto...</option>
+              </select>
+            </div>
+            <div class="campo">
+              <label>Quantidade *</label>
+              <input type="number" id="ent-quantidade" min="1" placeholder="0" />
+            </div>
+            <div class="campo">
+              <label>Fornecedor</label>
+              <input type="text" id="ent-fornecedor" placeholder="Nome do fornecedor" />
+            </div>
+            <div class="campo">
+              <label>Motivo / Observação</label>
+              <input type="text" id="ent-motivo" placeholder="Ex: Compra mensal" />
+            </div>
+          </div>
+          <div id="entrada-erro" class="erro-msg" style="display:none"></div>
+          <div id="entrada-ok" class="ok-msg" style="display:none"></div>
+          <button class="btn-primary" onclick="registrarEntrada()">✓ Registrar Entrada</button>
+        </div>
+      </section>
+
+      <!-- SAÍDA -->
+      <section id="sec-saida" class="secao">
+        <div class="page-header">
+          <h2>Registrar Saída</h2>
+          <span class="page-sub">Retire itens do estoque</span>
+        </div>
+        <div class="form-card">
+          <div class="form-grid">
+            <div class="campo">
+              <label>Produto *</label>
+              <select id="sai-produto">
+                <option value="">Selecione um produto...</option>
+              </select>
+            </div>
+            <div class="campo">
+              <label>Quantidade *</label>
+              <input type="number" id="sai-quantidade" min="1" placeholder="0" />
+            </div>
+            <div class="campo">
+              <label>Solicitante *</label>
+              <input type="text" id="sai-solicitante" placeholder="Nome do solicitante" />
+            </div>
+            <div class="campo">
+              <label>Departamento</label>
+              <input type="text" id="sai-departamento" placeholder="Ex: TI, RH, Financeiro" />
+            </div>
+            <div class="campo">
+              <label>Motivo</label>
+              <input type="text" id="sai-motivo" placeholder="Motivo da retirada" />
+            </div>
+          </div>
+          <div id="saida-erro" class="erro-msg" style="display:none"></div>
+          <div id="saida-ok" class="ok-msg" style="display:none"></div>
+          <button class="btn-primary" onclick="registrarSaida()">✓ Registrar Saída</button>
+        </div>
+      </section>
+
+      <!-- HISTÓRICO -->
+      <section id="sec-historico" class="secao">
+        <div class="page-header">
+          <h2>Histórico de Movimentações</h2>
+        </div>
+        <div class="filtros">
+          <select id="filtro-tipo" onchange="carregarHistorico()">
+            <option value="">Todos os tipos</option>
+            <option value="entrada">Entradas</option>
+            <option value="saida">Saídas</option>
+          </select>
+          <input type="date" id="filtro-data-ini" onchange="carregarHistorico()" />
+          <input type="date" id="filtro-data-fim" onchange="carregarHistorico()" />
+        </div>
+        <div class="tabela-container">
+          <table class="tabela">
+            <thead>
+              <tr><th>Data</th><th>Tipo</th><th>Produto</th><th>Qtd</th><th>Solicitante/Fornecedor</th><th>Depto</th></tr>
+            </thead>
+            <tbody id="tabela-historico"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- RELATÓRIOS -->
+      <section id="sec-relatorios" class="secao">
+        <div class="page-header">
+          <h2>Relatórios</h2>
+          <span class="page-sub">Análise do estoque</span>
+        </div>
+        <div class="cards-grid relatorio-cards">
+          <div class="card-relatorio" onclick="gerarRelatorio('estoque')">
+            <div class="rel-icon">◧</div>
+            <h4>Posição de Estoque</h4>
+            <p>Todos os produtos com quantidades atuais</p>
+          </div>
+          <div class="card-relatorio" onclick="gerarRelatorio('entradas')">
+            <div class="rel-icon" style="color:var(--verde)">↓</div>
+            <h4>Relatório de Entradas</h4>
+            <p>Histórico completo de entradas</p>
+          </div>
+          <div class="card-relatorio" onclick="gerarRelatorio('saidas')">
+            <div class="rel-icon" style="color:var(--laranja)">↑</div>
+            <h4>Relatório de Saídas</h4>
+            <p>Histórico completo de saídas</p>
+          </div>
+          <div class="card-relatorio" onclick="gerarRelatorio('baixo')">
+            <div class="rel-icon" style="color:var(--vermelho)">⚠</div>
+            <h4>Estoque Crítico</h4>
+            <p>Produtos abaixo do mínimo</p>
+          </div>
+        </div>
+        <div id="resultado-relatorio" class="tabela-container" style="display:none; margin-top:2rem;">
+          <div class="tabela-header" style="justify-content:space-between;">
+            <h3 id="rel-titulo">Relatório</h3>
+            <button class="btn-secondary small" onclick="imprimirRelatorio()">🖨 Imprimir</button>
+          </div>
+          <div id="rel-conteudo"></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ========== MODAL PRODUTO ========== -->
+  <div id="modal-produto" class="modal-overlay" style="display:none">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-titulo">Novo Produto</h3>
+        <button class="modal-fechar" onclick="fecharModalProduto()">✕</button>
+      </div>
+      <div class="form-grid">
+        <div class="campo">
+          <label>Código *</label>
+          <input type="text" id="prod-codigo" placeholder="Ex: MAT-001" />
+        </div>
+        <div class="campo">
+          <label>Nome *</label>
+          <input type="text" id="prod-nome" placeholder="Nome do produto" />
+        </div>
+        <div class="campo">
+          <label>Descrição</label>
+          <input type="text" id="prod-descricao" placeholder="Descrição opcional" />
+        </div>
+        <div class="campo">
+          <label>Categoria</label>
+          <input type="text" id="prod-categoria-nome" placeholder="Ex: Papelaria, Limpeza..." />
+        </div>
+        <div class="campo">
+          <label>Unidade *</label>
+          <select id="prod-unidade">
+            <option value="un">Unidade (un)</option>
+            <option value="cx">Caixa (cx)</option>
+            <option value="kg">Quilograma (kg)</option>
+            <option value="lt">Litro (lt)</option>
+            <option value="m">Metro (m)</option>
+            <option value="pc">Peça (pc)</option>
+            <option value="rs">Resma (rs)</option>
+            <option value="pr">Par (pr)</option>
+          </select>
+        </div>
+        <div class="campo">
+          <label>Qtd. Inicial</label>
+          <input type="number" id="prod-qtd" min="0" value="0" />
+        </div>
+        <div class="campo">
+          <label>Estoque Mínimo</label>
+          <input type="number" id="prod-minimo" min="0" value="0" />
+        </div>
+      </div>
+      <input type="hidden" id="prod-id" />
+      <div id="prod-erro" class="erro-msg" style="display:none"></div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="fecharModalProduto()">Cancelar</button>
+        <button class="btn-primary" onclick="salvarProduto()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
