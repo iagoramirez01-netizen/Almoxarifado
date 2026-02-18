@@ -3,8 +3,8 @@
 //   SUBSTITUA AS LINHAS ABAIXO PELOS SEUS DADOS
 // ============================================
 
-const SUPABASE_URL = 'COLE_AQUI_SEU_PROJECT_URL';
-const SUPABASE_KEY = 'COLE_AQUI_SUA_ANON_KEY';
+const SUPABASE_URL = 'https://alnfbajsdyhkdpixjwoo.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_WyJH8zOodOHfEif5iUqECw_mNXjwstp';
 
 // ============================================
 //   CLIENTE SUPABASE (NÃO MEXA AQUI)
